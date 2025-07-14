@@ -10,3 +10,6 @@ var eurToRub = usdToRub / usdToEur
 func main() {
 	fmt.Printf("Курс EUR к RUB: %.2f\n", eurToRub)
 }
+
+func getUserInput(value float64, curFrom, curTo string) float64 {
+}
