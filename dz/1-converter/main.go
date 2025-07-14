@@ -2,17 +2,12 @@ package main
 
 import "fmt"
 
-const usdToEur = 0.85
-const usdToRub = 78.49
-
-var eurToRub = usdToRub / usdToEur
-
 func main() {
-	getUserInput()
-	fmt.Printf("Курс EUR к RUB: %.2f\n", eurToRub)
+	currencyAmount, currencyFrom, currencyTo := getUserInput()
+	convertCurrency(currencyAmount, currencyFrom, currencyTo)
 }
 
-func getUserInput() {
+func getUserInput() (float64, string, string) {
 	var currencyAmount float64
 	var currencyFrom, currencyTo string
 
@@ -22,4 +17,8 @@ func getUserInput() {
 	fmt.Scan(&currencyFrom)
 	fmt.Print("Введите в какую валюты нужно конвертировать?")
 	fmt.Scan(&currencyTo)
+
+	return currencyAmount, currencyFrom, currencyTo
 }
+
+func convertCurrency(currencyAmount float64, currencyFrom, currencyTo string) {}
