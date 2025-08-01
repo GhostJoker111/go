@@ -101,7 +101,7 @@ func convertCurrency(currencyAmount float64, currencyFrom, currencyTo string) fl
 		fmt.Printf("%f", convertCurrency)
 
 	default:
-		fmt.Print("Что-то пошло не так(")
+		fmt.Print("Что-то пошло не так")
 	}
 
 	return convertCurrency
