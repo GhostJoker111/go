@@ -29,13 +29,13 @@ func getUserInput() (float64, string, string) {
 
 	for {
 		fmt.Println("Введите количество валюты: ")
-		currencyAmount, err := fmt.Scan(&currencyAmount)
+		currAmount, err := fmt.Scan(&currencyAmount)
 		if err != nil {
 			fmt.Println("Неверно указано количество. Введите число")
 			continue
 		}
 
-		if currencyAmount < 0 {
+		if currAmount < 0 {
 			fmt.Println("Введите положительное число")
 			continue
 		}
