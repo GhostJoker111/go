@@ -4,28 +4,26 @@ import (
 	"errors"
 	"fmt"
 	"sort"
+	"strconv"
 	"strings"
 )
 
 func main() {
-	var numbers []float64
 	operationType, operationTypeErr := scanOperationType()
-
 	if operationTypeErr != nil {
 		fmt.Println(operationTypeErr)
 		return
 	}
 
-	for {
-		number := scanNumbers()
-		if number == 0 {
-			break
-		}
-		numbers = append(numbers, number)
+	numbers, err := scanNumbers()
+	if err != nil {
+		fmt.Printf("Ошибка преобразования: %v\n", err)
+		return
 	}
+
 	sort.Float64s(numbers)
 	operationResult := calculateOperation(operationType, numbers)
-	fmt.Printf("Результат операции %.0s - %.0f", operationType, operationResult)
+	fmt.Printf("Результат операции %s - %.2f\n", operationType, operationResult)
 
 }
 
@@ -51,15 +49,16 @@ func scanOperationType() (string, error) {
 func calculateOperation(operationType string, numbers []float64) float64 {
 	var result float64
 
-	for _, value := range numbers {
-		if operationType == "AVG" {
-			result += value / float64(len(numbers))
-			continue
-		} else if operationType == "SUM" {
+	if operationType == "AVG" {
+		for _, value := range numbers {
 			result += value
-			continue
 		}
-
+		result = result / float64(len(numbers))
+	} else if operationType == "SUM" {
+		for _, value := range numbers {
+			result += value
+		}
+	} else if operationType == "MED" {
 		if len(numbers)%2 == 1 {
 			result = numbers[len(numbers)/2]
 		} else {
@@ -68,13 +67,33 @@ func calculateOperation(operationType string, numbers []float64) float64 {
 			result = (mid1 + mid2) / 2
 		}
 	}
+
 	return result
 }
 
-func scanNumbers() float64 {
-	var number float64
-	fmt.Println("Введите число (n для выхода): ")
-	fmt.Scan(&number)
+func scanNumbers() ([]float64, error) {
+	var input string
+	var numbers []float64
 
-	return number
+	fmt.Println("Введите число или числа через запятую (n для выхода): ")
+	fmt.Scan(&input)
+
+	input = strings.TrimSpace(input)
+	parts := strings.Split(input, ",")
+
+	for _, part := range parts {
+		part = strings.TrimSpace(part)
+		if part == "" {
+			continue
+		}
+
+		num, err := strconv.ParseFloat(part, 64)
+		if err != nil {
+			return nil, fmt.Errorf("Ошибка преобразования '%s': %v", part, err)
+		}
+
+		numbers = append(numbers, num)
+	}
+
+	return numbers, nil
 }
