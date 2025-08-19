@@ -22,25 +22,25 @@ func getUserInput() (float64, string, string) {
 	var currencyFrom, currencyTo string
 
 	for {
-		fmt.Printf("Введите из какой валюты нужно конвертировать(%s)?", strings.Join(allCurrencies, ", "))
+		fmt.Printf("Введите из какой валюты нужно конвертировать(%s)? ", strings.Join(allCurrencies, ", "))
 		fmt.Scan(&currencyFrom)
 		currencyFrom = strings.ToUpper(currencyFrom)
 
-		if currencyFrom == "USD" || currencyFrom == "EUR" || currencyFrom == "RUB" {
+		if _, exists := exchangeRates[currencyFrom]; exists {
 			break
 		}
 		fmt.Println("Введены некорректные символы. Выберите предложенную валюту")
 	}
 
 	for {
-		fmt.Println("Введите количество валюты: ")
-		currAmount, err := fmt.Scan(&currencyAmount)
+		fmt.Print("Введите количество валюты: ")
+		_, err := fmt.Scan(&currencyAmount)
 		if err != nil {
 			fmt.Println("Неверно указано количество. Введите число")
 			continue
 		}
 
-		if currAmount < 0 {
+		if currencyAmount < 0 {
 			fmt.Println("Введите положительное число")
 			continue
 		}
@@ -49,17 +49,17 @@ func getUserInput() (float64, string, string) {
 
 	for {
 		availableCurrencies := getAvailableCurrencies(currencyFrom)
-		fmt.Printf("Введите в какую валюты нужно конвертировать?(%s)", strings.Join(availableCurrencies, ", "))
+		fmt.Printf("Введите в какую валюту нужно конвертировать(%s)? ", strings.Join(availableCurrencies, ", "))
 		fmt.Scan(&currencyTo)
 		currencyTo = strings.ToUpper(currencyTo)
 
-		if currencyTo != "USD" && currencyTo != "EUR" && currencyTo != "RUB" {
+		if _, exists := exchangeRates[currencyTo]; !exists {
 			fmt.Println("Введены некорректные символы. Выберите предложенную валюту")
 			continue
 		}
 
 		if currencyTo == currencyFrom {
-			fmt.Println("Выбрана одинаковая валюта для конвертации. Выберите другую валюту")
+			fmt.Println("Выбрана одинаковая валюту для конвертации. Выберите другую валюту")
 			continue
 		}
 
