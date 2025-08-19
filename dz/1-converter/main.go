@@ -6,6 +6,11 @@ import (
 )
 
 var allCurrencies = []string{"USD", "EUR", "RUB"}
+var exchangeRates = map[string]float64{
+	"USD": 1.0,
+	"EUR": 1.15,
+	"RUB": 0.0125,
+}
 
 func main() {
 	currencyAmount, currencyFrom, currencyTo := getUserInput()
@@ -76,33 +81,18 @@ func getAvailableCurrencies(currencyFrom string) []string {
 	return availableCurrencies
 }
 
-func convertCurrency(currencyAmount float64, currencyFrom, currencyTo string) float64 {
-	var usdToRub, eurToRub, usdToEur = 0.0125, 0.011, 1.15
-	var convertCurrency float64
+func convertCurrency(amount float64, currencyFrom, currencyTo string) float64 {
+	fromRate, fromExists := exchangeRates[currencyFrom]
+	toRate, toExists := exchangeRates[currencyTo]
 
-	switch {
-	case currencyFrom == "USD" && currencyTo == "RUB":
-		convertCurrency = currencyAmount / usdToRub
-		fmt.Printf("%f", convertCurrency)
-	case currencyFrom == "RUB" && currencyTo == "USD":
-		convertCurrency = currencyAmount * usdToRub
-		fmt.Printf("%f", convertCurrency)
-	case currencyFrom == "EUR" && currencyTo == "RUB":
-		convertCurrency = currencyAmount / eurToRub
-		fmt.Printf("%f", convertCurrency)
-	case currencyFrom == "RUB" && currencyTo == "EUR":
-		convertCurrency = currencyAmount * eurToRub
-		fmt.Printf("%f", convertCurrency)
-	case currencyFrom == "USD" && currencyTo == "EUR":
-		convertCurrency = currencyAmount / usdToEur
-		fmt.Printf("%f", convertCurrency)
-	case currencyFrom == "EUR" && currencyTo == "USD":
-		convertCurrency = currencyAmount * usdToEur
-		fmt.Printf("%f", convertCurrency)
-
-	default:
-		fmt.Print("Что-то пошло не так")
+	if !fromExists || !toExists {
+		fmt.Println("Ошибка: валюта не найдена в таблице курсов")
+		return 0
 	}
 
-	return convertCurrency
+	amountInUSD := amount * fromRate
+	result := amountInUSD / toRate
+	fmt.Println(result)
+
+	return result
 }
