@@ -6,7 +6,7 @@ import (
 )
 
 var allCurrencies = []string{"USD", "EUR", "RUB"}
-var exchangeRates = map[string]float64{
+var exchangeRates = &map[string]float64{
 	"USD": 1.0,
 	"EUR": 1.15,
 	"RUB": 0.0125,
@@ -26,7 +26,7 @@ func getUserInput() (float64, string, string) {
 		fmt.Scan(&currencyFrom)
 		currencyFrom = strings.ToUpper(currencyFrom)
 
-		if _, exists := exchangeRates[currencyFrom]; exists {
+		if _, exists := (*exchangeRates)[currencyFrom]; exists {
 			break
 		}
 		fmt.Println("Введены некорректные символы. Выберите предложенную валюту")
@@ -53,7 +53,7 @@ func getUserInput() (float64, string, string) {
 		fmt.Scan(&currencyTo)
 		currencyTo = strings.ToUpper(currencyTo)
 
-		if _, exists := exchangeRates[currencyTo]; !exists {
+		if _, exists := (*exchangeRates)[currencyTo]; !exists {
 			fmt.Println("Введены некорректные символы. Выберите предложенную валюту")
 			continue
 		}
@@ -82,8 +82,8 @@ func getAvailableCurrencies(currencyFrom string) []string {
 }
 
 func convertCurrency(amount float64, currencyFrom, currencyTo string) float64 {
-	fromRate, fromExists := exchangeRates[currencyFrom]
-	toRate, toExists := exchangeRates[currencyTo]
+	fromRate, fromExists := (*exchangeRates)[currencyFrom]
+	toRate, toExists := (*exchangeRates)[currencyTo]
 
 	if !fromExists || !toExists {
 		fmt.Println("Ошибка: валюта не найдена в таблице курсов")
